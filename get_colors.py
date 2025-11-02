@@ -62,7 +62,7 @@ def get(img_path: pathlib.PosixPath, config_path: str | None = None):
 		elif len(uniq) == len(merged_colors) and neighborhood >= max_neighborhood + neighborhood_step:
 			break
 
-		if len(uniq) <= need_colors:
+		if len(merged_colors) < need_colors:
 			break
 		uniq = np.array(merged_colors)
 		counts = np.array(merged_counts)

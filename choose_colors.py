@@ -10,8 +10,17 @@ def bgr_to_hex(b, g, r):
     green = g
     blue = b
 
-    # Convert each component to a two-digit hexadecimal string
     hex_color = f"#{red:02X}{green:02X}{blue:02X}"
+    return hex_color
+
+def bgra_to_hex(b, g, r, a=255):
+    # Reorder to RGBA
+    red = r
+    green = g
+    blue = b
+    alpha = a
+
+    hex_color = f"#{red:02X}{green:02X}{blue:02X}{alpha:02X}"
     return hex_color
 
 def cosine_similarity(a, b):
@@ -31,14 +40,34 @@ def choose(palitre: get_colors.Palitre):
 		
 	#print(sortfunc(list(palitre.colors.keys())[0]))
 
-	ready_dict = dict(sorted(list(palitre.colors.items()), reverse=True, key=lambda a: sortfunc(a[0], list(palitre.colors.keys())[0])))
+	ready_colors = sorted(list(palitre.colors.items()), reverse=True, key=lambda a: sortfunc(a[0], list(palitre.colors.keys())[0]))
 
-	print(ready_dict)
+	#print(ready_dict)
 
-	ready_json = {bgr_to_hex(*key) : value for key, value in ready_dict.items()}
+	ready_json = {bgr_to_hex(*key) : value for key, value in ready_colors}
+	main_color = max(ready_colors[:3], key=lambda a: a[1])[0]
+	secondary_color = max(ready_colors[3:-3], key=lambda a: a[1])[0]
+	text_color = max(ready_colors[-3:], key=lambda a: a[1])[0]
+	
+
+	save_conf = {
+		"all_colors": ready_json,
+		"eww": {
+			"main_color": bgr_to_hex(*(main_color)[:3]),
+			"secondary_color": bgr_to_hex(*(secondary_color)[:3]),
+			"text_color": bgr_to_hex(*(text_color)[:3]),
+		},
+		"hyprland": {
+			"active_border_color_1": bgra_to_hex(*secondary_color),
+			"active_border_color_2": bgra_to_hex(*text_color),
+			"inactive_border_color_1": bgra_to_hex(*main_color),
+			"inactive_border_color_2": bgra_to_hex(*main_color),
+		}
+	}
+	
 
 	with open(palitre.conf_path, 'w') as f:
-		json.dump(ready_json, f)
+		json.dump(save_conf, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
 	a = get_colors.Palitre(

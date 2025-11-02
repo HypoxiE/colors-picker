@@ -3,4 +3,6 @@ __pycache__
 
 *.png
 *.jpg
+*.avif
+
 *.conf
