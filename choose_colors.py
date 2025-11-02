@@ -56,6 +56,7 @@ def choose(palitre: get_colors.Palitre):
 			"main_color": bgr_to_hex(*(main_color)[:3]),
 			"secondary_color": bgr_to_hex(*(secondary_color)[:3]),
 			"text_color": bgr_to_hex(*(text_color)[:3]),
+			"icons_color": bgr_to_hex(*(text_color)[:3]),
 		},
 		"hyprland": {
 			"active_border_color_1": bgra_to_hex(*secondary_color),
