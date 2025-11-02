@@ -25,17 +25,20 @@ def cosine_similarity(a, b):
 	return dot_product / (norm_a * norm_b)
 
 def choose(palitre: get_colors.Palitre):
-	def sortfunc(color):
-		black = (0, 0, 0)
+	def sortfunc(color, main_color):
 
-		return cosine_similarity(black, color)
+		return cosine_similarity(main_color, color)
 		
-	print(sortfunc(list(palitre.colors.keys())[0]))
+	#print(sortfunc(list(palitre.colors.keys())[0]))
 
-	print(dict(sorted(list(palitre.colors.items()), key=lambda a: sortfunc(a[0]))))
+	ready_dict = dict(sorted(list(palitre.colors.items()), reverse=True, key=lambda a: sortfunc(a[0], list(palitre.colors.keys())[0])))
 
-	#with open(palitre.conf_path, 'w') as f:
-	#	json.dump(dict(sorted(palitre.colors.items(), key=lambda item: item[1], reverse=True)), f)
+	print(ready_dict)
+
+	ready_json = {bgr_to_hex(*key) : value for key, value in ready_dict.items()}
+
+	with open(palitre.conf_path, 'w') as f:
+		json.dump(ready_json, f)
 
 if __name__ == "__main__":
 	a = get_colors.Palitre(
